@@ -3,117 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BitForge Lite</title>
-  <meta name="description" content="Lightweight Bitcoin mining, transaction efficiency, and Lightning dashboard shell." />
+  <title>BitForge Miner</title>
+  <meta name="description" content="A lightweight browser-based Bitcoin-style proof-of-work miner demo." />
   <style>
     :root {
-      --bg: #080b12;
+      --bg: #070a10;
       --panel: #101724;
-      --panel-2: #151f30;
-      --text: #f4f7fb;
-      --muted: #9ca8ba;
-      --line: rgba(255,255,255,0.10);
+      --panel2: #151f30;
+      --text: #f7f9fc;
+      --muted: #9eabbc;
+      --line: rgba(255,255,255,0.11);
       --accent: #f7931a;
-      --accent-2: #ffd27a;
-      --good: #49d17d;
-      --warn: #ffcd4a;
-      --bad: #ff5c73;
-      --blue: #67a7ff;
-      --shadow: 0 18px 45px rgba(0,0,0,0.35);
+      --accent2: #ffc766;
+      --good: #4ade80;
+      --warn: #facc15;
+      --bad: #fb7185;
+      --blue: #60a5fa;
       --radius: 20px;
-      --nav-h: 78px;
+      --shadow: 0 18px 45px rgba(0,0,0,0.38);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(247, 147, 26, 0.18), transparent 30%),
-        radial-gradient(circle at top right, rgba(103, 167, 255, 0.13), transparent 28%),
-        linear-gradient(180deg, #080b12 0%, #0b1020 100%);
-      padding-bottom: calc(var(--nav-h) + 18px);
+        radial-gradient(circle at top left, rgba(247, 147, 26, 0.20), transparent 31%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 26%),
+        linear-gradient(180deg, #070a10, #0b1020);
     }
 
-    button, input, select {
+    button, input, textarea {
       font: inherit;
     }
 
     .app {
-      width: min(1160px, 100%);
+      width: min(1120px, 100%);
       margin: 0 auto;
       padding: 18px;
     }
 
     .topbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 14px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .brand {
       display: flex;
-      align-items: center;
       gap: 12px;
+      align-items: center;
       min-width: 0;
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
+      width: 50px;
+      height: 50px;
+      border-radius: 17px;
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, var(--accent), #ffbd59);
       color: #111;
-      box-shadow: 0 12px 24px rgba(247, 147, 26, 0.24);
-      font-weight: 900;
-      font-size: 26px;
+      background: linear-gradient(135deg, var(--accent), #ffd27d);
+      font-size: 27px;
+      font-weight: 950;
+      box-shadow: 0 12px 28px rgba(247, 147, 26, 0.25);
     }
 
-    .brand h1 {
-      margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 4px;
+      font-size: clamp(1.45rem, 4vw, 2.2rem);
+      letter-spacing: -0.05em;
       line-height: 1;
-      letter-spacing: -0.04em;
     }
 
-    .brand p {
-      margin: 5px 0 0;
+    .subtitle {
       color: var(--muted);
-      font-size: 0.9rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      margin: 0;
+      font-size: 0.93rem;
+      line-height: 1.35;
     }
 
-    .mode-pill {
-      border: 1px solid rgba(247, 147, 26, 0.35);
-      color: var(--accent-2);
-      background: rgba(247, 147, 26, 0.10);
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 9px 12px;
       border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.07);
+      color: var(--muted);
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 800;
       white-space: nowrap;
     }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .dot.good { background: var(--good); }
+    .dot.warn { background: var(--warn); }
+    .dot.bad { background: var(--bad); }
+    .dot.blue { background: var(--blue); }
 
     .hero {
       border: 1px solid var(--line);
-      border-radius: 26px;
       background:
-        linear-gradient(135deg, rgba(247, 147, 26, 0.14), rgba(103, 167, 255, 0.08)),
-        rgba(16, 23, 36, 0.82);
+        linear-gradient(135deg, rgba(247, 147, 26, 0.15), rgba(96, 165, 250, 0.08)),
+        rgba(16, 23, 36, 0.86);
       box-shadow: var(--shadow);
+      border-radius: 28px;
       padding: 18px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       overflow: hidden;
       position: relative;
     }
@@ -121,118 +134,49 @@
     .hero:after {
       content: "";
       position: absolute;
-      inset: auto -25% -55% auto;
-      width: 360px;
-      height: 360px;
+      right: -130px;
+      bottom: -210px;
+      width: 420px;
+      height: 420px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(247, 147, 26, 0.07);
-      pointer-events: none;
+      background: rgba(247,147,26,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 0.8fr;
-      gap: 16px;
-      align-items: center;
+    .hero-content {
       position: relative;
       z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      align-items: center;
     }
 
     .hero h2 {
-      margin: 0 0 8px;
-      font-size: clamp(1.5rem, 4vw, 2.55rem);
-      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+      font-size: clamp(1.45rem, 4vw, 2.55rem);
+      letter-spacing: -0.055em;
+      line-height: 1;
     }
 
     .hero p {
-      margin: 0;
       color: var(--muted);
-      max-width: 690px;
       line-height: 1.55;
+      margin-bottom: 0;
+      max-width: 720px;
     }
 
-    .score-card {
-      background: rgba(8, 11, 18, 0.62);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 16px;
+    .warning {
+      border: 1px solid rgba(250, 204, 21, 0.25);
+      background: rgba(250, 204, 21, 0.09);
+      color: #ffec99;
+      border-radius: 18px;
+      padding: 14px;
+      line-height: 1.45;
     }
 
-    .score-label {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-    }
-
-    .score-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-    }
-
-    .score {
-      font-size: 3.4rem;
-      font-weight: 900;
-      letter-spacing: -0.08em;
-      line-height: 0.95;
-    }
-
-    .score-row span {
-      color: var(--muted);
-      margin-bottom: 6px;
-      font-weight: 700;
-    }
-
-    .meter {
-      height: 12px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.09);
-      margin-top: 12px;
-    }
-
-    .meter > div {
-      height: 100%;
-      width: 74%;
-      background: linear-gradient(90deg, var(--accent), var(--good));
-      border-radius: inherit;
-    }
-
-    .view {
-      display: none;
-      animation: fadeIn 150ms ease-out;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-title {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 20px 0 12px;
-    }
-
-    .section-title h3 {
-      margin: 0;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-    }
-
-    .section-title p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 0.88rem;
+    .warning strong {
+      color: #fff2b2;
     }
 
     .grid {
@@ -240,16 +184,16 @@
       gap: 14px;
     }
 
-    .grid.cards {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
     .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr 1fr;
     }
 
     .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .card {
@@ -260,34 +204,32 @@
       box-shadow: 0 12px 28px rgba(0,0,0,0.18);
     }
 
-    .card.soft {
-      background: rgba(21, 31, 48, 0.68);
-    }
-
     .card-title {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.095em;
+      font-size: 0.78rem;
+      font-weight: 900;
       display: flex;
       justify-content: space-between;
+      gap: 10px;
       align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
       margin-bottom: 10px;
     }
 
     .metric {
-      font-size: 1.7rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
+      font-size: clamp(1.6rem, 4vw, 2.15rem);
+      font-weight: 950;
+      letter-spacing: -0.055em;
+      line-height: 1.05;
+      word-break: break-word;
     }
 
     .metric small {
-      font-size: 0.9rem;
       color: var(--muted);
+      font-size: 0.9rem;
       letter-spacing: 0;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .hint {
@@ -297,77 +239,29 @@
       margin-top: 8px;
     }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border-radius: 999px;
-      padding: 6px 9px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.06);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--muted);
-    }
-
-    .good .dot, .dot.good { background: var(--good); }
-    .warn .dot, .dot.warn { background: var(--warn); }
-    .bad .dot, .dot.bad { background: var(--bad); }
-    .blue .dot, .dot.blue { background: var(--blue); }
-
-    .status.good { color: #c7ffd8; border-color: rgba(73,209,125,0.24); background: rgba(73,209,125,0.09); }
-    .status.warn { color: #ffe7a1; border-color: rgba(255,205,74,0.24); background: rgba(255,205,74,0.09); }
-    .status.bad { color: #ffc7d0; border-color: rgba(255,92,115,0.24); background: rgba(255,92,115,0.09); }
-    .status.blue { color: #cfe2ff; border-color: rgba(103,167,255,0.24); background: rgba(103,167,255,0.09); }
-
-    .list {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .row {
+    .controls {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .row:first-child {
-      border-top: 0;
-      padding-top: 0;
-    }
-
-    .row:last-child {
-      padding-bottom: 0;
-    }
-
-    .row strong {
-      font-size: 0.96rem;
-    }
-
-    .row span {
-      color: var(--muted);
-      font-size: 0.88rem;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
     .btn {
       border: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--accent), #ffc15a);
-      color: #141414;
-      font-weight: 900;
-      padding: 12px 14px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--accent), #ffd27d);
+      color: #111;
+      font-weight: 950;
+      padding: 12px 15px;
       cursor: pointer;
-      box-shadow: 0 12px 22px rgba(247, 147, 26, 0.18);
+      box-shadow: 0 12px 24px rgba(247,147,26,0.18);
+    }
+
+    .btn.stop {
+      background: rgba(251, 113, 133, 0.16);
+      color: #ffc6d0;
+      border: 1px solid rgba(251, 113, 133, 0.32);
+      box-shadow: none;
     }
 
     .btn.secondary {
@@ -377,134 +271,147 @@
       box-shadow: none;
     }
 
-    .btn:active {
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn:active:not(:disabled) {
       transform: translateY(1px);
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .input-grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     label {
       display: grid;
-      gap: 7px;
+      gap: 8px;
       color: var(--muted);
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 800;
     }
 
-    input, select {
+    input, textarea {
       width: 100%;
       color: var(--text);
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.075);
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 12px;
       outline: none;
     }
 
-    input:focus, select:focus {
-      border-color: rgba(247, 147, 26, 0.6);
+    textarea {
+      min-height: 78px;
+      resize: vertical;
+      line-height: 1.4;
     }
 
-    .learn-item {
-      border: 1px solid var(--line);
-      background: rgba(16, 23, 36, 0.78);
-      border-radius: 18px;
-      padding: 14px;
+    input:focus, textarea:focus {
+      border-color: rgba(247,147,26,0.7);
     }
 
-    .learn-item h4 {
-      margin: 0 0 6px;
-      font-size: 1rem;
+    input[type="range"] {
+      accent-color: var(--accent);
+      padding: 0;
     }
 
-    .learn-item p {
+    .section-title {
+      margin: 20px 0 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 10px;
+    }
+
+    .section-title h3 {
       margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.93rem;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
     }
 
-    .callout {
-      border: 1px solid rgba(247, 147, 26, 0.24);
-      background: rgba(247, 147, 26, 0.09);
-      color: #ffe2ab;
-      border-radius: 18px;
-      padding: 14px;
+    .section-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .hashbox {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      word-break: break-all;
+      font-size: 0.88rem;
       line-height: 1.45;
-    }
-
-    .callout strong {
-      color: var(--accent-2);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 10;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%);
-      width: min(720px, calc(100% - 20px));
-      height: var(--nav-h);
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      padding: 8px;
+      color: #dbeafe;
+      background: rgba(0,0,0,0.28);
       border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(10, 14, 24, 0.91);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 70px;
     }
 
-    .nav-btn {
-      border: 0;
+    .log {
+      height: 260px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .log-entry {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.055);
+      border-radius: 14px;
+      padding: 10px;
       color: var(--muted);
-      background: transparent;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .log-entry.found {
+      border-color: rgba(74, 222, 128, 0.35);
+      background: rgba(74, 222, 128, 0.09);
+      color: #d5ffe1;
+    }
+
+    .status-banner {
       border-radius: 18px;
-      cursor: pointer;
-      font-size: 0.72rem;
-      font-weight: 800;
-      display: grid;
-      place-items: center;
-      gap: 3px;
-      padding: 6px 2px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      padding: 13px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    .nav-btn .icon {
-      font-size: 1.25rem;
-      line-height: 1;
+    .status-banner strong {
+      font-size: 0.98rem;
     }
 
-    .nav-btn.active {
-      color: #111;
-      background: linear-gradient(135deg, var(--accent), #ffc766);
+    .status-banner span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .found-flash {
+      animation: flash 950ms ease-out;
+    }
+
+    @keyframes flash {
+      0% { box-shadow: 0 0 0 rgba(74,222,128,0); }
+      25% { box-shadow: 0 0 0 8px rgba(74,222,128,0.14); }
+      100% { box-shadow: 0 0 0 rgba(74,222,128,0); }
     }
 
     @media (max-width: 860px) {
-      .hero-grid,
+      .hero-content,
       .grid.two,
       .grid.three,
-      .grid.cards {
+      .grid.four {
         grid-template-columns: 1fr;
       }
 
       .topbar {
         align-items: flex-start;
-      }
-
-      .brand p {
-        white-space: normal;
       }
     }
 
@@ -513,37 +420,18 @@
         padding: 14px;
       }
 
-      .logo {
-        width: 42px;
-        height: 42px;
-        font-size: 23px;
-        border-radius: 14px;
-      }
-
-      .mode-pill {
+      .pill {
         display: none;
       }
 
-      .input-grid {
-        grid-template-columns: 1fr;
+      .logo {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
       }
 
-      .bottom-nav {
-        height: 74px;
-        border-radius: 20px;
-      }
-
-      .nav-btn {
-        font-size: 0.64rem;
-      }
-
-      .nav-btn .icon {
-        font-size: 1.08rem;
-      }
-
-      .hero,
-      .card {
-        border-radius: 18px;
+      .hero, .card {
+        border-radius: 19px;
       }
     }
   </style>
@@ -554,444 +442,464 @@
       <div class="brand">
         <div class="logo">₿</div>
         <div>
-          <h1>BitForge Lite</h1>
-          <p>Mining monitor + transaction efficiency + Lightning dashboard</p>
+          <h1>BitForge Miner</h1>
+          <p class="subtitle">Local browser proof-of-work miner using Bitcoin-style double SHA-256 hashing.</p>
         </div>
       </div>
-      <div class="mode-pill" id="modePill">Demo Mode</div>
+      <div class="pill" id="topStatus"><span class="dot bad"></span>Idle</div>
     </header>
 
-    <section class="hero">
-      <div class="hero-grid">
+    <section class="hero" id="hero">
+      <div class="hero-content">
         <div>
-          <h2>Lightweight Bitcoin operations dashboard.</h2>
+          <h2>The app itself mines demo blocks.</h2>
           <p>
-            This v1 shell uses demo data only. It does not mine Bitcoin by itself, change Bitcoin rules,
-            handle private keys, or sign transactions. It is built to become a safe dashboard first.
+            This version performs local proof-of-work in your browser. It repeatedly changes a nonce,
+            double-hashes the block data with SHA-256, and checks whether the hash meets the selected demo difficulty.
           </p>
           <div class="controls">
-            <button class="btn" id="refreshBtn">Refresh Demo Data</button>
-            <button class="btn secondary" data-jump="learn">Why not faster blocks?</button>
+            <button class="btn" id="startBtn">Start Mining</button>
+            <button class="btn stop" id="stopBtn" disabled>Stop Mining</button>
+            <button class="btn secondary" id="resetBtn">Reset</button>
           </div>
         </div>
-        <div class="score-card">
-          <div class="score-label">Efficiency Score</div>
-          <div class="score-row"><div class="score" id="efficiencyScore">74</div><span>/100</span></div>
-          <div class="meter"><div id="efficiencyMeter"></div></div>
-          <div class="hint" id="efficiencyHint">Good batching potential. Lightning is offline in demo mode.</div>
+        <div class="warning">
+          <strong>Important:</strong> this mines demo blocks only. It does real local hashing, but it does not connect to a Bitcoin pool,
+          submit shares, receive rewards, or mine real BTC yet.
         </div>
       </div>
     </section>
 
-    <section class="view active" id="dashboard">
-      <div class="section-title">
-        <div>
-          <h3>Dashboard</h3>
-          <p>Quick overview of network, mining, transaction, and Lightning status.</p>
-        </div>
+    <section class="status-banner">
+      <div>
+        <strong id="statusText">Miner is idle</strong><br>
+        <span id="statusSubtext">Press Start Mining to begin hashing locally.</span>
       </div>
-
-      <div class="grid cards">
-        <article class="card">
-          <div class="card-title">Network <span class="status good"><i class="dot"></i> Normal</span></div>
-          <div class="metric" id="blockTime">9.8 <small>min</small></div>
-          <div class="hint">Estimated average time to next block.</div>
-        </article>
-
-        <article class="card">
-          <div class="card-title">Mempool <span class="status warn"><i class="dot"></i> Moderate</span></div>
-          <div class="metric" id="mempoolLoad">62<small>%</small></div>
-          <div class="hint">Demo congestion indicator.</div>
-        </article>
-
-        <article class="card">
-          <div class="card-title">Fee <span class="status blue"><i class="dot"></i> Estimate</span></div>
-          <div class="metric" id="recommendedFee">18 <small>sat/vB</small></div>
-          <div class="hint">Suggested normal-priority fee.</div>
-        </article>
-
-        <article class="card">
-          <div class="card-title">Mode <span class="status warn"><i class="dot"></i> Demo</span></div>
-          <div class="metric">Safe <small>shell</small></div>
-          <div class="hint">No wallet or private keys in v1.</div>
-        </article>
-      </div>
-
-      <div class="section-title">
-        <div>
-          <h3>Action Center</h3>
-          <p>Recommended next steps from the mock status engine.</p>
-        </div>
-      </div>
-
-      <div class="grid two">
-        <article class="card soft">
-          <div class="card-title">Best Move</div>
-          <div class="metric">Batch payments</div>
-          <div class="hint">If sending multiple payments, batching can reduce total on-chain footprint.</div>
-        </article>
-
-        <article class="card soft">
-          <div class="card-title">Warning</div>
-          <div class="metric">Lightning offline</div>
-          <div class="hint">Future versions can connect to a Lightning node for fast small payments.</div>
-        </article>
-      </div>
+      <div class="pill" id="workerStatus"><span class="dot bad"></span>Stopped</div>
     </section>
 
-    <section class="view" id="mining">
-      <div class="section-title">
-        <div>
-          <h3>Mining</h3>
-          <p>Mock miner and pool monitoring shell.</p>
-        </div>
-        <span class="status good"><i class="dot"></i> Pool Connected</span>
-      </div>
+    <section class="grid four">
+      <article class="card">
+        <div class="card-title">Hash Rate</div>
+        <div class="metric" id="hashRate">0 <small>H/s</small></div>
+        <div class="hint">Hashes attempted per second.</div>
+      </article>
 
-      <div class="grid cards">
-        <article class="card">
-          <div class="card-title">Hash Rate</div>
-          <div class="metric" id="hashRate">92.4 <small>TH/s</small></div>
-          <div class="hint">Demo ASIC output.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Temperature</div>
-          <div class="metric" id="temp">67 <small>°C</small></div>
-          <div class="hint">Healthy demo range.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Power</div>
-          <div class="metric" id="power">3,180 <small>W</small></div>
-          <div class="hint">Used later for profit estimates.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Daily Estimate</div>
-          <div class="metric" id="earnings">$4.82</div>
-          <div class="hint">Fake demo earnings.</div>
-        </article>
-      </div>
+      <article class="card">
+        <div class="card-title">Total Hashes</div>
+        <div class="metric" id="totalHashes">0</div>
+        <div class="hint">Total nonce attempts this session.</div>
+      </article>
 
-      <div class="grid two" style="margin-top:14px;">
-        <article class="card">
-          <div class="card-title">Share Status</div>
-          <div class="list">
-            <div class="row"><div><strong>Accepted shares</strong><br><span>Pool accepted valid work</span></div><strong id="acceptedShares">1,284</strong></div>
-            <div class="row"><div><strong>Rejected shares</strong><br><span>Lower is better</span></div><strong id="rejectedShares">7</strong></div>
-            <div class="row"><div><strong>Reject rate</strong><br><span>Demo quality indicator</span></div><strong id="rejectRate">0.54%</strong></div>
-          </div>
-        </article>
+      <article class="card">
+        <div class="card-title">Current Nonce</div>
+        <div class="metric" id="nonce">0</div>
+        <div class="hint">The changing number being tested.</div>
+      </article>
 
-        <article class="card">
-          <div class="card-title">Future Connections</div>
-          <div class="list">
-            <div class="row"><div><strong>ASIC local API</strong><br><span>Antminer, WhatsMiner, or other miners</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-            <div class="row"><div><strong>Mining pool API</strong><br><span>Read worker status and payouts</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-            <div class="row"><div><strong>Thermal alerts</strong><br><span>Notify on overheating</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-          </div>
-        </article>
-      </div>
+      <article class="card">
+        <div class="card-title">Demo Blocks Found</div>
+        <div class="metric" id="blocksFound">0</div>
+        <div class="hint">Hashes that met your demo target.</div>
+      </article>
     </section>
 
-    <section class="view" id="transactions">
-      <div class="section-title">
-        <div>
-          <h3>Transactions</h3>
-          <p>Fee and efficiency planning shell.</p>
+    <div class="section-title">
+      <div>
+        <h3>Mining Controls</h3>
+        <p>Keep difficulty low on a phone. Higher difficulty may take a long time.</p>
+      </div>
+    </div>
+
+    <section class="grid two">
+      <article class="card">
+        <div class="card-title">Difficulty</div>
+        <label>
+          Demo difficulty: <strong id="difficultyLabel">2 leading hex zeros</strong>
+          <input id="difficulty" type="range" min="1" max="5" step="1" value="2" />
+        </label>
+        <div class="hint" id="difficultyHint">
+          Target: hash must start with 00. Rough demo odds: 1 in 256 hashes.
         </div>
-        <span class="status blue"><i class="dot"></i> Planner</span>
-      </div>
 
-      <div class="grid three">
-        <article class="card">
-          <div class="card-title">Low Priority</div>
-          <div class="metric" id="lowFee">8 <small>sat/vB</small></div>
-          <div class="hint">Slower confirmation, cheaper fee.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Normal Priority</div>
-          <div class="metric" id="normalFee">18 <small>sat/vB</small></div>
-          <div class="hint">Balanced speed and cost.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">High Priority</div>
-          <div class="metric" id="highFee">31 <small>sat/vB</small></div>
-          <div class="hint">Faster confirmation, higher cost.</div>
-        </article>
-      </div>
+        <div style="height:14px"></div>
 
-      <div class="grid two" style="margin-top:14px;">
-        <article class="card">
-          <div class="card-title">Batching Helper</div>
-          <div class="input-grid">
-            <label>Number of payments
-              <input id="paymentCount" type="number" min="1" value="5" />
-            </label>
-            <label>Average amount per payment
-              <input id="paymentAmount" type="number" min="0" step="0.000001" value="0.0025" />
-            </label>
-          </div>
-          <div class="controls">
-            <button class="btn" id="batchBtn">Estimate Batch</button>
-          </div>
-          <div class="callout" id="batchResult" style="margin-top:12px;">
-            <strong>Demo estimate:</strong> batching 5 payments may reduce repeated overhead versus sending 5 separate transactions.
-          </div>
-        </article>
+        <label>
+          CPU throttle
+          <input id="throttle" type="range" min="0" max="100" step="10" value="30" />
+        </label>
+        <div class="hint" id="throttleHint">Throttle: 30%. Higher throttle slows mining but keeps the app smoother.</div>
+      </article>
 
-        <article class="card">
-          <div class="card-title">UTXO Health</div>
-          <div class="metric" id="utxoScore">B+</div>
-          <div class="hint">A future version can analyze small UTXOs and recommend consolidation during low-fee periods.</div>
-          <div class="list">
-            <div class="row"><div><strong>Dust risk</strong><br><span>Too many tiny outputs</span></div><span class="status good"><i class="dot"></i> Low</span></div>
-            <div class="row"><div><strong>Fee bumping</strong><br><span>RBF/CPFP education</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-          </div>
-        </article>
-      </div>
+      <article class="card">
+        <div class="card-title">Demo Block Data</div>
+        <label>
+          Data to mine
+          <textarea id="blockData">BitForge Miner demo block | user=local | tx=demo-payment-001,demo-payment-002 | previous=000000000000demo</textarea>
+        </label>
+        <div class="hint">
+          The miner combines this data with a timestamp, block height, difficulty, and nonce.
+        </div>
+      </article>
     </section>
 
-    <section class="view" id="lightning">
-      <div class="section-title">
-        <div>
-          <h3>Lightning</h3>
-          <p>Fast-payment dashboard shell for future node connections.</p>
-        </div>
-        <span class="status bad"><i class="dot"></i> Offline</span>
+    <div class="section-title">
+      <div>
+        <h3>Current Hash</h3>
+        <p>The latest double SHA-256 result from the mining loop.</p>
       </div>
+    </div>
 
-      <div class="grid cards">
-        <article class="card">
-          <div class="card-title">Node Status</div>
-          <div class="metric">Offline</div>
-          <div class="hint">No node connected in v1.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Channels</div>
-          <div class="metric" id="channelCount">0</div>
-          <div class="hint">Future channel count.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Outbound</div>
-          <div class="metric">0 <small>sats</small></div>
-          <div class="hint">Spendable liquidity.</div>
-        </article>
-        <article class="card">
-          <div class="card-title">Inbound</div>
-          <div class="metric">0 <small>sats</small></div>
-          <div class="hint">Receivable liquidity.</div>
-        </article>
-      </div>
+    <section class="grid two">
+      <article class="card">
+        <div class="card-title">Hash Output</div>
+        <div class="hashbox" id="currentHash">Waiting for mining to start...</div>
+      </article>
 
-      <div class="card" style="margin-top:14px;">
-        <div class="card-title">Why Lightning Matters</div>
-        <p class="hint">
-          Lightning can move many small payments without putting every individual payment directly into a Bitcoin block.
-          That is the realistic path toward “more transactions than normal” while still settling back to Bitcoin.
-        </p>
-      </div>
+      <article class="card">
+        <div class="card-title">Target Rule</div>
+        <div class="hashbox" id="targetRule">Hash must start with 00</div>
+      </article>
     </section>
 
-    <section class="view" id="learn">
-      <div class="section-title">
-        <div>
-          <h3>Learn</h3>
-          <p>Plain-English explanations built into the app.</p>
-        </div>
+    <div class="section-title">
+      <div>
+        <h3>Mining Log</h3>
+        <p>Blocks found and miner events.</p>
       </div>
+    </div>
 
-      <div class="grid two">
-        <div class="learn-item">
-          <h4>What mining actually does</h4>
-          <p>Mining collects valid transactions into a block and searches for a proof-of-work result that Bitcoin nodes will accept.</p>
-        </div>
-        <div class="learn-item">
-          <h4>Why lightweight does not mean faster Bitcoin</h4>
-          <p>A lightweight app can be efficient, but it cannot make Bitcoin nodes accept blocks that break Bitcoin consensus rules.</p>
-        </div>
-        <div class="learn-item">
-          <h4>What batching does</h4>
-          <p>Batching combines multiple payments into one transaction so repeated overhead is reduced.</p>
-        </div>
-        <div class="learn-item">
-          <h4>What Lightning does</h4>
-          <p>Lightning allows many fast small payments off-chain, then final balances can settle back onto Bitcoin.</p>
-        </div>
-        <div class="learn-item">
-          <h4>What fees are</h4>
-          <p>Fees are paid to miners. Higher fees usually make a transaction more attractive when blocks are crowded.</p>
-        </div>
-        <div class="learn-item">
-          <h4>What v1 avoids</h4>
-          <p>This shell avoids private keys, seed phrases, wallet signing, and real payments. Those should be handled carefully later.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="view" id="settings">
-      <div class="section-title">
-        <div>
-          <h3>Settings</h3>
-          <p>Visual settings and placeholders for future live connections.</p>
-        </div>
-      </div>
-
-      <div class="grid two">
-        <article class="card">
-          <div class="card-title">App Settings</div>
-          <div class="input-grid">
-            <label>App mode
-              <select id="modeSelect">
-                <option value="demo">Demo Mode</option>
-                <option value="live" disabled>Live Mode - later</option>
-              </select>
-            </label>
-            <label>Currency
-              <select id="currencySelect">
-                <option>USD</option>
-                <option>BTC</option>
-                <option>sats</option>
-              </select>
-            </label>
-            <label>Miner type
-              <select>
-                <option>Demo ASIC</option>
-                <option disabled>Antminer - later</option>
-                <option disabled>WhatsMiner - later</option>
-                <option disabled>Manual entry - later</option>
-              </select>
-            </label>
-            <label>Pool
-              <input value="DemoPool" />
-            </label>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-title">Connection Placeholders</div>
-          <div class="list">
-            <div class="row"><div><strong>Bitcoin node URL</strong><br><span>Not connected</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-            <div class="row"><div><strong>Lightning node</strong><br><span>LND, Core Lightning, or service API</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-            <div class="row"><div><strong>Mining pool key</strong><br><span>Read-only API only</span></div><span class="status warn"><i class="dot"></i> Later</span></div>
-          </div>
-        </article>
-      </div>
-
-      <div class="callout" style="margin-top:14px;">
-        <strong>Safety rule:</strong> never paste a Bitcoin seed phrase, wallet private key, or exchange password into this app.
-      </div>
+    <section class="card">
+      <div class="log" id="log"></div>
     </section>
   </main>
 
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <button class="nav-btn active" data-target="dashboard"><span class="icon">⌁</span>Dash</button>
-    <button class="nav-btn" data-target="mining"><span class="icon">⛏</span>Mining</button>
-    <button class="nav-btn" data-target="transactions"><span class="icon">⇄</span>Tx</button>
-    <button class="nav-btn" data-target="lightning"><span class="icon">⚡</span>Lightning</button>
-    <button class="nav-btn" data-target="learn"><span class="icon">?</span>Learn</button>
-    <button class="nav-btn" data-target="settings"><span class="icon">⚙</span>Settings</button>
-  </nav>
-
   <script>
-    const state = {
-      efficiency: 74,
-      blockTime: 9.8,
-      mempoolLoad: 62,
-      normalFee: 18,
-      hashRate: 92.4,
-      temp: 67,
-      power: 3180,
-      earnings: 4.82,
-      accepted: 1284,
-      rejected: 7
-    };
-
     const $ = (id) => document.getElementById(id);
 
-    function setView(target) {
-      document.querySelectorAll(".view").forEach(view => {
-        view.classList.toggle("active", view.id === target);
-      });
+    const state = {
+      running: false,
+      totalHashes: 0,
+      nonce: 0,
+      blocksFound: 0,
+      currentHash: "",
+      hashRate: 0,
+      worker: null,
+      sessionStartedAt: null
+    };
 
-      document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.target === target);
-      });
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    function formatNumber(num) {
+      return new Intl.NumberFormat("en-US").format(Math.floor(num));
     }
 
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => setView(btn.dataset.target));
-    });
-
-    document.querySelectorAll("[data-jump]").forEach(btn => {
-      btn.addEventListener("click", () => setView(btn.dataset.jump));
-    });
-
-    function formatNumber(value) {
-      return new Intl.NumberFormat("en-US").format(value);
+    function addLog(message, found = false) {
+      const entry = document.createElement("div");
+      entry.className = "log-entry" + (found ? " found" : "");
+      entry.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong><br>${message}`;
+      $("log").prepend(entry);
     }
 
-    function updateUI() {
-      $("efficiencyScore").textContent = state.efficiency;
-      $("efficiencyMeter").style.width = state.efficiency + "%";
-      $("blockTime").innerHTML = state.blockTime.toFixed(1) + ' <small>min</small>';
-      $("mempoolLoad").innerHTML = state.mempoolLoad + '<small>%</small>';
-      $("recommendedFee").innerHTML = state.normalFee + ' <small>sat/vB</small>';
-      $("lowFee").innerHTML = Math.max(1, state.normalFee - 10) + ' <small>sat/vB</small>';
-      $("normalFee").innerHTML = state.normalFee + ' <small>sat/vB</small>';
-      $("highFee").innerHTML = (state.normalFee + 13) + ' <small>sat/vB</small>';
-      $("hashRate").innerHTML = state.hashRate.toFixed(1) + ' <small>TH/s</small>';
-      $("temp").innerHTML = state.temp + ' <small>°C</small>';
-      $("power").innerHTML = formatNumber(state.power) + ' <small>W</small>';
-      $("earnings").textContent = "$" + state.earnings.toFixed(2);
-      $("acceptedShares").textContent = formatNumber(state.accepted);
-      $("rejectedShares").textContent = formatNumber(state.rejected);
-      const rejectRate = (state.rejected / (state.accepted + state.rejected)) * 100;
-      $("rejectRate").textContent = rejectRate.toFixed(2) + "%";
+    function setStatus(running) {
+      $("startBtn").disabled = running;
+      $("stopBtn").disabled = !running;
 
-      if (state.efficiency >= 80) {
-        $("efficiencyHint").textContent = "Strong efficiency setup. Demo recommends waiting for lower fees if not urgent.";
-      } else if (state.efficiency >= 65) {
-        $("efficiencyHint").textContent = "Good batching potential. Lightning is offline in demo mode.";
+      if (running) {
+        $("topStatus").innerHTML = '<span class="dot good"></span>Mining';
+        $("workerStatus").innerHTML = '<span class="dot good"></span>Running';
+        $("statusText").textContent = "Miner is hashing";
+        $("statusSubtext").textContent = "The browser is attempting double SHA-256 proof-of-work.";
       } else {
-        $("efficiencyHint").textContent = "Efficiency needs work. Future versions can recommend batching, Lightning, or UTXO cleanup.";
+        $("topStatus").innerHTML = '<span class="dot bad"></span>Idle';
+        $("workerStatus").innerHTML = '<span class="dot bad"></span>Stopped';
+        $("statusText").textContent = "Miner is idle";
+        $("statusSubtext").textContent = "Press Start Mining to begin hashing locally.";
       }
     }
 
-    function randomBetween(min, max, decimals = 0) {
-      const val = Math.random() * (max - min) + min;
-      return Number(val.toFixed(decimals));
+    function updateDifficultyText() {
+      const zeros = Number($("difficulty").value);
+      const target = "0".repeat(zeros);
+      const odds = Math.pow(16, zeros);
+      $("difficultyLabel").textContent = `${zeros} leading hex zero${zeros === 1 ? "" : "s"}`;
+      $("difficultyHint").textContent = `Target: hash must start with ${target}. Rough demo odds: 1 in ${formatNumber(odds)} hashes.`;
+      $("targetRule").textContent = `Hash must start with ${target}`;
     }
 
-    $("refreshBtn").addEventListener("click", () => {
-      state.efficiency = randomBetween(58, 91);
-      state.blockTime = randomBetween(4.5, 13.8, 1);
-      state.mempoolLoad = randomBetween(22, 88);
-      state.normalFee = randomBetween(7, 36);
-      state.hashRate = randomBetween(78, 103, 1);
-      state.temp = randomBetween(58, 78);
-      state.power = randomBetween(2950, 3420);
-      state.earnings = randomBetween(3.25, 6.15, 2);
-      state.accepted = randomBetween(900, 1900);
-      state.rejected = randomBetween(2, 18);
-      updateUI();
+    function updateThrottleText() {
+      $("throttleHint").textContent = `Throttle: ${$("throttle").value}%. Higher throttle slows mining but keeps the app smoother.`;
+    }
+
+    $("difficulty").addEventListener("input", updateDifficultyText);
+    $("throttle").addEventListener("input", updateThrottleText);
+
+    function createMinerWorker() {
+      const workerCode = `
+        let running = false;
+        let nonce = 0;
+        let totalHashes = 0;
+        let blocksFound = 0;
+        let lastReportAt = performance.now();
+        let lastReportHashes = 0;
+        let blockData = "";
+        let difficulty = 2;
+        let throttle = 30;
+        let blockHeight = 1;
+        let encoder = new TextEncoder();
+
+        function toHex(buffer) {
+          return Array.from(new Uint8Array(buffer))
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("");
+        }
+
+        async function sha256dHex(text) {
+          const first = await crypto.subtle.digest("SHA-256", encoder.encode(text));
+          const second = await crypto.subtle.digest("SHA-256", first);
+          return toHex(second);
+        }
+
+        function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function mineLoop() {
+          const targetPrefix = () => "0".repeat(difficulty);
+
+          while (running) {
+            const startedBatch = performance.now();
+            const batchSize = 25;
+
+            for (let i = 0; i < batchSize && running; i++) {
+              const header =
+                "version=1" +
+                "|height=" + blockHeight +
+                "|time=" + Date.now() +
+                "|difficulty=" + difficulty +
+                "|data=" + blockData +
+                "|nonce=" + nonce;
+
+              const hash = await sha256dHex(header);
+              totalHashes++;
+              nonce++;
+
+              if (hash.startsWith(targetPrefix())) {
+                blocksFound++;
+                postMessage({
+                  type: "found",
+                  nonce,
+                  hash,
+                  totalHashes,
+                  blocksFound,
+                  blockHeight,
+                  target: targetPrefix()
+                });
+                blockHeight++;
+              }
+
+              const now = performance.now();
+              if (now - lastReportAt >= 250) {
+                const seconds = (now - lastReportAt) / 1000;
+                const hashesSince = totalHashes - lastReportHashes;
+                const rate = hashesSince / seconds;
+                lastReportAt = now;
+                lastReportHashes = totalHashes;
+
+                postMessage({
+                  type: "stats",
+                  nonce,
+                  hash,
+                  totalHashes,
+                  blocksFound,
+                  hashRate: rate
+                });
+              }
+            }
+
+            if (throttle > 0) {
+              const elapsed = performance.now() - startedBatch;
+              const delay = Math.max(1, Math.round((throttle / 100) * 30 - elapsed));
+              if (delay > 0) await sleep(delay);
+            } else {
+              await sleep(0);
+            }
+          }
+
+          postMessage({
+            type: "stopped",
+            nonce,
+            totalHashes,
+            blocksFound
+          });
+        }
+
+        self.onmessage = (event) => {
+          const msg = event.data;
+
+          if (msg.type === "start") {
+            running = true;
+            nonce = msg.startNonce || 0;
+            totalHashes = msg.totalHashes || 0;
+            blocksFound = msg.blocksFound || 0;
+            blockData = msg.blockData || "";
+            difficulty = msg.difficulty || 2;
+            throttle = msg.throttle ?? 30;
+            blockHeight = msg.blockHeight || 1;
+            lastReportAt = performance.now();
+            lastReportHashes = totalHashes;
+            mineLoop();
+          }
+
+          if (msg.type === "stop") {
+            running = false;
+          }
+
+          if (msg.type === "settings") {
+            difficulty = msg.difficulty || difficulty;
+            throttle = msg.throttle ?? throttle;
+            blockData = msg.blockData ?? blockData;
+          }
+        };
+      `;
+
+      const blob = new Blob([workerCode], { type: "text/javascript" });
+      const workerUrl = URL.createObjectURL(blob);
+      return new Worker(workerUrl);
+    }
+
+    function renderStats() {
+      $("hashRate").innerHTML = `${formatNumber(state.hashRate)} <small>H/s</small>`;
+      $("totalHashes").textContent = formatNumber(state.totalHashes);
+      $("nonce").textContent = formatNumber(state.nonce);
+      $("blocksFound").textContent = formatNumber(state.blocksFound);
+      $("currentHash").textContent = state.currentHash || "Waiting for mining to start...";
+    }
+
+    function startMining() {
+      if (state.running) return;
+
+      state.running = true;
+      state.worker = createMinerWorker();
+
+      state.worker.onmessage = (event) => {
+        const msg = event.data;
+
+        if (msg.type === "stats") {
+          state.nonce = msg.nonce;
+          state.totalHashes = msg.totalHashes;
+          state.blocksFound = msg.blocksFound;
+          state.hashRate = msg.hashRate;
+          state.currentHash = msg.hash;
+          renderStats();
+        }
+
+        if (msg.type === "found") {
+          state.nonce = msg.nonce;
+          state.totalHashes = msg.totalHashes;
+          state.blocksFound = msg.blocksFound;
+          state.currentHash = msg.hash;
+          renderStats();
+
+          $("hero").classList.remove("found-flash");
+          void $("hero").offsetWidth;
+          $("hero").classList.add("found-flash");
+
+          addLog(
+            `Demo block #${msg.blockHeight} found!<br>Nonce: ${formatNumber(msg.nonce)}<br>Target: starts with ${msg.target}<br>Hash: <span style="word-break:break-all;">${msg.hash}</span>`,
+            true
+          );
+        }
+
+        if (msg.type === "stopped") {
+          state.running = false;
+          setStatus(false);
+          addLog("Mining stopped.");
+        }
+      };
+
+      state.worker.postMessage({
+        type: "start",
+        startNonce: state.nonce,
+        totalHashes: state.totalHashes,
+        blocksFound: state.blocksFound,
+        blockData: $("blockData").value,
+        difficulty: Number($("difficulty").value),
+        throttle: Number($("throttle").value),
+        blockHeight: state.blocksFound + 1
+      });
+
+      setStatus(true);
+      addLog("Mining started. Local browser proof-of-work is running.");
+    }
+
+    function stopMining() {
+      if (!state.running || !state.worker) return;
+      state.worker.postMessage({ type: "stop" });
+      state.worker.terminate();
+      state.worker = null;
+      state.running = false;
+      state.hashRate = 0;
+      renderStats();
+      setStatus(false);
+      addLog("Mining stopped.");
+    }
+
+    function resetMiner() {
+      stopMining();
+      state.totalHashes = 0;
+      state.nonce = 0;
+      state.blocksFound = 0;
+      state.currentHash = "";
+      state.hashRate = 0;
+      $("log").innerHTML = "";
+      renderStats();
+      addLog("Miner reset.");
+    }
+
+    $("startBtn").addEventListener("click", startMining);
+    $("stopBtn").addEventListener("click", stopMining);
+    $("resetBtn").addEventListener("click", resetMiner);
+
+    $("difficulty").addEventListener("change", () => {
+      if (state.worker) {
+        state.worker.postMessage({
+          type: "settings",
+          difficulty: Number($("difficulty").value),
+          throttle: Number($("throttle").value),
+          blockData: $("blockData").value
+        });
+        addLog(`Difficulty changed to ${$("difficulty").value} leading hex zero(s).`);
+      }
     });
 
-    $("batchBtn").addEventListener("click", () => {
-      const count = Math.max(1, Number($("paymentCount").value || 1));
-      const amount = Math.max(0, Number($("paymentAmount").value || 0));
-      const total = count * amount;
-      const estimatedSavings = Math.min(68, 12 + count * 7);
-
-      $("batchResult").innerHTML =
-        `<strong>Demo estimate:</strong> batching ${count} payments totaling ${total.toFixed(8)} BTC could reduce repeated transaction overhead by roughly ${estimatedSavings}% compared with sending each payment separately.`;
+    $("throttle").addEventListener("change", () => {
+      if (state.worker) {
+        state.worker.postMessage({
+          type: "settings",
+          difficulty: Number($("difficulty").value),
+          throttle: Number($("throttle").value),
+          blockData: $("blockData").value
+        });
+        addLog(`CPU throttle changed to ${$("throttle").value}%.`);
+      }
     });
 
-    $("modeSelect").addEventListener("change", (e) => {
-      $("modePill").textContent = e.target.value === "demo" ? "Demo Mode" : "Live Mode";
+    $("blockData").addEventListener("change", () => {
+      if (state.worker) {
+        state.worker.postMessage({
+          type: "settings",
+          difficulty: Number($("difficulty").value),
+          throttle: Number($("throttle").value),
+          blockData: $("blockData").value
+        });
+        addLog("Block data updated.");
+      }
     });
 
-    updateUI();
+    updateDifficultyText();
+    updateThrottleText();
+    renderStats();
+    setStatus(false);
+    addLog("Ready. This app performs demo proof-of-work locally in your browser.");
   </script>
 </body>
 </html>
